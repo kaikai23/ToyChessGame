@@ -68,13 +68,14 @@ class Chess_Env:
         
         # ALLOWED ACTIONS FOR THE AGENT, ONE-HOT ENCODED
         allowed_a=np.concatenate([self.a_q1,self.a_k1],0)
+        # allowed_a.shape[0] = 24 + 8 =32
         
         # FEATURES (INPUT TO NN) AT THIS POSITION
         X=self.Features()
 
         
         
-        return self.Board, X, allowed_a
+        return self.Board, X, allowed_a # 16x16, 58x1, 32x1
         
     
     def OneStep(self,a_agent):
@@ -201,6 +202,7 @@ class Chess_Env:
         
         # ALL FEATURES...
         x = np.concatenate([s_k1, s_q1, s_k2, check, K2dof],0)
+        # x.shape[0] = 16 + 16 + 16 + 2 + 8
         
         return x
         
