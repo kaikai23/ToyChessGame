@@ -16,8 +16,8 @@ run `Visualize.py`.
 #### To rerun all our the experiments, 
 run `PlayGame.py`. This will run all the experiments and overwrite files in `results/` folder, and also visualize them in the end. You can also visualize them anytime by running `Visualize.py`. The only thing matters is the files in `results/`.
 
-## Try your own experiment in three lines of code!
-In `PlayGame.py`, under `if __name__ == '__main__':`, add your experiment by adding three lines of code.
+## Try your own experiment in only three lines of code!
+In `PlayGame.py`, under `if __name__ == '__main__':`, you could add your experiment by adding only three lines of code!
 
 Example:
 
@@ -41,4 +41,4 @@ The main code is in `Agent`, it has the network and all hyper-parameters as its 
 3. We did ablation study for each hyper-parameter that is in concern for better analyzing the results. See **III. EXPERIMENTS** in our report.
 
 ## Report
-see `report.pdf`.
+see [report.pdf](report.pdf).
