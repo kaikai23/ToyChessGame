@@ -1,0 +1,14 @@
+We divide the work as follows:
+1. Both of us read the chess_env.py file to get familiar with the environment.
+2. Yifei worked on the training loop and neural network.
+3. Ye worked on running expetiments and visualization.
+4. Both of us wrote the report.
+5. Yifei wrote the github README.md.
+
+Meeting log:
+March 4th, kickoff meeting, decided to make a group of two.
+March 12th, second meeting, decided to try mountain car example first.
+March 18th, third meeting, communicate how q-learning and sarsa work, as well as neural network. Distribute work according to personal preference.
+March 25th, forth meeting, communicate about progress, start to write report.
+March 29th, fifth meeting, upload code to github.
+March 31th, last meeting, check everything.

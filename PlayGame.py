@@ -5,12 +5,7 @@ import torch
 from tqdm import tqdm
 from matplotlib import pyplot as plt
 from pathlib import Path
-
-# env=Chess_Env(N_grid=4)
-# S,X,allowed_a=env.Initialise_game()
-# N_a=np.shape(allowed_a)[0]   # TOTAL NUMBER OF POSSIBLE ACTIONS
-# N_in=np.shape(X)[0]    ## INPUT SIZE
-# N_h=200                ## NUMBER OF HIDDEN NODES
+from Visualize import visualize, moving_average
 
 
 ## DEFINE YOUR NEURAL NETWORK...
@@ -24,19 +19,6 @@ class Q_Net(nn.Module):
     def forward(self, x, mask):
         return self.net(x) * mask
 
-# HYPERPARAMETERS SUGGESTED (FOR A GRID SIZE OF 4)
-
-# epsilon_0 = 0.2     # STARTING VALUE OF EPSILON FOR THE EPSILON-GREEDY POLICY
-# beta = 0.00005      # THE PARAMETER SETS HOW QUICKLY THE VALUE OF EPSILON IS DECAYING (SEE epsilon_f BELOW)
-# gamma = 0.85        # THE DISCOUNT FACTOR
-# eta = 0.0035        # THE LEARNING RATE
-#
-# # N_episodes = 100000 # THE NUMBER OF GAMES TO BE PLAYED
-# N_episodes = 100000
-#
-# # SAVING VARIABLES
-# R_save = np.zeros([N_episodes, 1])
-# N_moves_save = np.zeros([N_episodes, 1])
 
 # DEFINE THE EPSILON-GREEDY POLICY
 def EpsilonGreedy_Policy(Qvalues, allowed_a, epsilon):
@@ -49,6 +31,8 @@ def EpsilonGreedy_Policy(Qvalues, allowed_a, epsilon):
         a = masked_Qvalues.argmax()
     return a
 
+
+# DEFINE THE AGENT
 class Agent:
     def __init__(self, env):
         self.env = env
@@ -84,13 +68,15 @@ class Agent:
     def set_decay_speed(self, beta):
         self.beta = beta
 
-    def set_optimizer(self, lr, name='SGD'):
+    def set_optimizer(self, lr=0.0035, name='SGD'):
         self.eta = lr
         self.optimizer_name = name
         if name == 'SGD':
             self.optimizer = torch.optim.SGD(self.Q_Net.parameters(), lr=lr)
         elif name == 'AdamW':
             self.optimizer = torch.optim.AdamW(self.Q_Net.parameters(), lr=lr)
+        elif name == 'RMSprop':
+            self.optimizer = torch.optim.RMSprop(self.Q_Net.parameters(), lr=lr)
         else:
             raise 'ERROR: Method Not Implemented'
 
@@ -178,147 +164,107 @@ class Agent:
         return self.R_save, self.N_moves_save
 
 
-env = Chess_Env(N_grid=4)
-agent = Agent(env)
-agent.reset_all()
+if __name__ == '__main__':
+    env = Chess_Env(N_grid=4)
+    agent = Agent(env)
+    agent.reset_all()
 
-# Ensure the results folder exists, otherwise create one.
-Path('./results').mkdir(parents=True, exist_ok=True)
+    # Ensure the results folder exists, otherwise create one.
+    Path('./results').mkdir(parents=True, exist_ok=True)
 
-# Structure to save results
-Results = dict()
-Results['Q_learning'] = dict()
-Results['SARSA'] = dict()
+    # Structure to save results
+    Results = dict()
+    Results['Q_learning'] = dict()
+    Results['SARSA'] = dict()
 
-# Q learning, default hyperparameters
-Results['Q_learning']['default'] = dict()
-Results['Q_learning']['default']['R'], Results['Q_learning']['default']['N_moves'] = agent.train_q_learning()
-np.save('results/R_q_default.npy', Results['Q_learning']['default']['R'])
-np.save('results/N_q_default.npy', Results['Q_learning']['default']['N_moves'])
+    # # Q learning, default hyperparameters
+    # Results['Q_learning']['default'] = dict()
+    # Results['Q_learning']['default']['R'], Results['Q_learning']['default']['N_moves'] = agent.train_q_learning()
+    # np.save('results/R_q_default.npy', Results['Q_learning']['default']['R'])
+    # np.save('results/N_q_default.npy', Results['Q_learning']['default']['N_moves'])
+    #
+    # # SARSA, default hyperparameters
+    # Results['SARSA']['default'] = dict()
+    # Results['SARSA']['default']['R'], Results['SARSA']['default']['N_moves'] = agent.train_sarsa()
+    # np.save('results/R_sarsa_default.npy', Results['SARSA']['default']['R'])
+    # np.save('results/N_sarsa_default.npy', Results['SARSA']['default']['N_moves'])
+    #
+    # # DISCOUNT FACTOR: gamma = 0.75
+    # agent.set_discount_factor(0.75)
+    # Results['Q_learning']['gamma=0.75'] = dict()
+    # Results['Q_learning']['gamma=0.75']['R'], Results['Q_learning']['gamma=0.75']['N_moves'] = agent.train_q_learning()
+    # np.save('results/R_q_gamma0.75.npy', Results['Q_learning']['gamma=0.75']['R'])
+    # np.save('results/N_q_gamma0.75.npy', Results['Q_learning']['gamma=0.75']['N_moves'])
+    #
+    # Results['SARSA']['gamma=0.75'] = dict()
+    # Results['SARSA']['gamma=0.75']['R'], Results['SARSA']['gamma=0.75']['N_moves'] = agent.train_sarsa()
+    # np.save('results/R_sarsa_gamma0.75.npy', Results['SARSA']['gamma=0.75']['R'])
+    # np.save('results/N_sarsa_gamma0.75.npy', Results['SARSA']['gamma=0.75']['N_moves'])
+    #
+    # #  DISCOUNT FACTOR: gamma = 0.95
+    # agent.set_discount_factor(0.95)
+    # Results['Q_learning']['gamma=0.95'] = dict()
+    # Results['Q_learning']['gamma=0.95']['R'], Results['Q_learning']['gamma=0.95']['N_moves'] = agent.train_q_learning()
+    # np.save('results/R_q_gamma0.95.npy', Results['Q_learning']['gamma=0.95']['R'])
+    # np.save('results/N_q_gamma0.95.npy', Results['Q_learning']['gamma=0.95']['N_moves'])
+    #
+    # Results['SARSA']['gamma=0.95'] = dict()
+    # Results['SARSA']['gamma=0.95']['R'], Results['SARSA']['gamma=0.95']['N_moves'] = agent.train_sarsa()
+    # np.save('results/R_sarsa_gamma0.95.npy', Results['SARSA']['gamma=0.95']['R'])
+    # np.save('results/N_sarsa_gamma0.95.npy', Results['SARSA']['gamma=0.95']['N_moves'])
+    #
+    # # DECAY FACTOR: beta = 0.0005
+    # agent.reset_all()
+    # agent.set_decay_speed(0.0005)
+    # Results['Q_learning']['beta=0.0005'] = dict()
+    # Results['Q_learning']['beta=0.0005']['R'], Results['Q_learning']['beta=0.0005']['N_moves'] = agent.train_q_learning()
+    # np.save('results/R_q_beta0.0005.npy', Results['Q_learning']['beta=0.0005']['R'])
+    # np.save('results/N_q_beta0.0005.npy', Results['Q_learning']['beta=0.0005']['N_moves'])
+    #
+    # Results['SARSA']['beta=0.0005'] = dict()
+    # Results['SARSA']['beta=0.0005']['R'], Results['SARSA']['beta=0.0005']['N_moves'] = agent.train_sarsa()
+    # np.save('results/R_sarsa_beta0.0005.npy', Results['SARSA']['beta=0.0005']['R'])
+    # np.save('results/N_sarsa_beta0.0005.npy', Results['SARSA']['beta=0.0005']['N_moves'])
+    #
+    # # DECAY FACTOR: beta = 0.000005
+    # agent.reset_all()
+    # agent.set_decay_speed(0.000005)
+    # Results['Q_learning']['beta=0.000005'] = dict()
+    # Results['Q_learning']['beta=0.000005']['R'], Results['Q_learning']['beta=0.000005']['N_moves'] = agent.train_q_learning()
+    # np.save('results/R_q_beta0.000005.npy', Results['Q_learning']['beta=0.000005']['R'])
+    # np.save('results/N_q_beta0.000005.npy', Results['Q_learning']['beta=0.000005']['N_moves'])
+    #
+    # Results['SARSA']['beta=0.000005'] = dict()
+    # Results['SARSA']['beta=0.000005']['R'], Results['SARSA']['beta=0.000005']['N_moves'] = agent.train_sarsa()
+    # np.save('results/R_sarsa_beta0.000005.npy', Results['SARSA']['beta=0.000005']['R'])
+    # np.save('results/N_sarsa_beta0.000005.npy', Results['SARSA']['beta=0.000005']['N_moves'])
 
-# SARSA, default hyperparameters
-Results['SARSA']['default'] = dict()
-Results['SARSA']['default']['R'], Results['SARSA']['default']['N_moves'] = agent.train_sarsa()
-np.save('results/R_sarsa_default.npy', Results['SARSA']['default']['R'])
-np.save('results/N_sarsa_default.npy', Results['SARSA']['default']['N_moves'])
+    # RMSprop vs. SGD
+    agent.reset_all()
+    agent.set_optimizer(lr=0.01, name='RMSprop')
+    Results['Q_learning']['RMSprop'] = dict()
+    Results['Q_learning']['RMSprop']['R'], Results['Q_learning']['RMSprop']['N_moves'] = agent.train_q_learning()
+    np.save('results/R_q_RMSprop.npy', Results['Q_learning']['RMSprop']['R'])
+    np.save('results/N_q_RMSprop.npy', Results['Q_learning']['RMSprop']['N_moves'])
 
-# DISCOUNT FACTOR: gamma = 0.75
-agent.set_discount_factor(0.75)
-Results['Q_learning']['gamma=0.75'] = dict()
-Results['Q_learning']['gamma=0.75']['R'], Results['Q_learning']['gamma=0.75']['N_moves'] = agent.train_q_learning()
-np.save('results/R_q_gamma0.75.npy', Results['Q_learning']['gamma=0.75']['R'])
-np.save('results/N_q_gamma0.75.npy', Results['Q_learning']['gamma=0.75']['N_moves'])
+    Results['SARSA']['RMSprop'] = dict()
+    Results['SARSA']['RMSprop']['R'], Results['SARSA']['RMSprop']['N_moves'] = agent.train_sarsa()
+    np.save('results/R_sarsa_RMSprop.npy', Results['SARSA']['RMSprop']['R'])
+    np.save('results/N_sarsa_RMSprop.npy', Results['SARSA']['RMSprop']['N_moves'])
 
-Results['SARSA']['gamma=0.75'] = dict()
-Results['SARSA']['gamma=0.75']['R'], Results['SARSA']['gamma=0.75']['N_moves'] = agent.train_sarsa()
-np.save('results/R_sarsa_gamma0.75.npy', Results['SARSA']['gamma=0.75']['R'])
-np.save('results/N_sarsa_gamma0.75.npy', Results['SARSA']['gamma=0.75']['N_moves'])
+    # # AdamW vs. SGD
+    # agent.reset_all()
+    # agent.set_optimizer(lr=0.001, name='AdamW')
+    # Results['Q_learning']['AdamW'] = dict()
+    # Results['Q_learning']['AdamW']['R'], Results['Q_learning']['AdamW']['N_moves'] = agent.train_q_learning()
+    # np.save('results/R_q_AdamW.npy', Results['Q_learning']['AdamW']['R'])
+    # np.save('results/N_q_AdamW.npy', Results['Q_learning']['AdamW']['N_moves'])
+    #
+    # Results['SARSA']['AdamW'] = dict()
+    # Results['SARSA']['AdamW']['R'], Results['SARSA']['AdamW']['N_moves'] = agent.train_sarsa()
+    # np.save('results/R_sarsa_AdamW.npy', Results['SARSA']['AdamW']['R'])
+    # np.save('results/N_sarsa_AdamW.npy', Results['SARSA']['AdamW']['N_moves'])
 
-#  DISCOUNT FACTOR: gamma = 0.95
-agent.set_discount_factor(0.95)
-Results['Q_learning']['gamma=0.95'] = dict()
-Results['Q_learning']['gamma=0.95']['R'], Results['Q_learning']['gamma=0.95']['N_moves'] = agent.train_q_learning()
-np.save('results/R_q_gamma0.95.npy', Results['Q_learning']['gamma=0.95']['R'])
-np.save('results/N_q_gamma0.95.npy', Results['Q_learning']['gamma=0.95']['N_moves'])
 
-Results['SARSA']['gamma=0.95'] = dict()
-Results['SARSA']['gamma=0.95']['R'], Results['SARSA']['gamma=0.95']['N_moves'] = agent.train_sarsa()
-np.save('results/R_sarsa_gamma0.95.npy', Results['SARSA']['gamma=0.95']['R'])
-np.save('results/N_sarsa_gamma0.95.npy', Results['SARSA']['gamma=0.95']['N_moves'])
+    visualize()
 
-# DECAY FACTOR: beta = 0.0005
-agent.reset_all()
-agent.set_decay_speed(0.0005)
-Results['Q_learning']['beta=0.0005'] = dict()
-Results['Q_learning']['beta=0.0005']['R'], Results['Q_learning']['beta=0.0005']['N_moves'] = agent.train_q_learning()
-np.save('results/R_q_beta0.0005.npy', Results['Q_learning']['beta=0.0005']['R'])
-np.save('results/N_q_beta0.0005.npy', Results['Q_learning']['beta=0.0005']['N_moves'])
-
-Results['SARSA']['beta=0.0005'] = dict()
-Results['SARSA']['beta=0.0005']['R'], Results['SARSA']['beta=0.0005']['N_moves'] = agent.train_sarsa()
-np.save('results/R_sarsa_beta0.0005.npy', Results['SARSA']['beta=0.0005']['R'])
-np.save('results/N_sarsa_beta0.0005.npy', Results['SARSA']['beta=0.0005']['N_moves'])
-
-# DECAY FACTOR: beta = 0.000005
-agent.reset_all()
-agent.set_decay_speed(0.000005)
-Results['Q_learning']['beta=0.000005'] = dict()
-Results['Q_learning']['beta=0.000005']['R'], Results['Q_learning']['beta=0.000005']['N_moves'] = agent.train_q_learning()
-np.save('results/R_q_beta0.000005.npy', Results['Q_learning']['beta=0.000005']['R'])
-np.save('results/N_q_beta0.000005.npy', Results['Q_learning']['beta=0.000005']['N_moves'])
-
-Results['SARSA']['beta=0.000005'] = dict()
-Results['SARSA']['beta=0.000005']['R'], Results['SARSA']['beta=0.000005']['N_moves'] = agent.train_sarsa()
-np.save('results/R_sarsa_beta0.000005.npy', Results['SARSA']['beta=0.000005']['R'])
-np.save('results/N_sarsa_beta0.000005.npy', Results['SARSA']['beta=0.000005']['N_moves'])
-
-# # TRAINING LOOP BONE STRUCTURE...
-# Q_Net = Q_Net(N_in, N_h, N_a)
-# optimizer = torch.optim.SGD(Q_Net.parameters(), lr=eta)
-# # I WROTE FOR YOU A RANDOM AGENT (THE RANDOM AGENT WILL BE SLOWER TO GIVE CHECKMATE THAN AN OPTIMISED ONE,
-# # SO DON'T GET CONCERNED BY THE TIME IT TAKES), CHANGE WITH YOURS ...
-#
-# for n in tqdm(range(N_episodes)):
-#     epsilon_f = epsilon_0 / (1 + beta * n)  ## DECAYING EPSILON
-#     Done = 0  ## SET DONE TO ZERO (BEGINNING OF THE EPISODE)
-#     i = 1  ## COUNTER FOR NUMBER OF ACTIONS
-#     S, X, allowed_a = env.Initialise_game()  ## INITIALISE GAME
-#     while Done == 0:  ## START THE EPISODE
-#         ## THIS IS A RANDOM AGENT, CHANGE IT...
-#         Q_values = Q_Net(torch.from_numpy(X).float(), torch.from_numpy(allowed_a).squeeze())
-#         a = EpsilonGreedy_Policy(Q_values, allowed_a, epsilon_f)
-#         S_next, X_next, allowed_a_next, R, Done = env.OneStep(a)
-#
-#         ## THE EPISODE HAS ENDED, UPDATE...BE CAREFUL, THIS IS THE LAST STEP OF THE EPISODE
-#         if Done == 1:
-#             R_save[n] = np.copy(R)
-#             N_moves_save[n] = np.copy(i)
-#
-#             optimizer.zero_grad()
-#             loss = 0.5 * (Q_values[a] - R)**2
-#             loss.backward()
-#             optimizer.step()
-#             break
-#
-#         # IF THE EPISODE IS NOT OVER...
-#         else:
-#             Q_values_next = Q_Net(torch.from_numpy(X_next).float(), torch.from_numpy(allowed_a_next).squeeze())
-#             optimizer.zero_grad()
-#             loss = 0.5 * (Q_values[a] - R - gamma * Q_values_next.max()) ** 2
-#             loss.backward()
-#             optimizer.step()
-#
-#
-#         # NEXT STATE AND CO. BECOME ACTUAL STATE...
-#         S = np.copy(S_next)
-#         X = np.copy(X_next)
-#         allowed_a = np.copy(allowed_a_next)
-#
-#         i += 1  # UPDATE COUNTER FOR NUMBER OF ACTIONS
-
-# PLOT THE TOTAL REWARD PER EPISODE AS TRAINING PROGRESSES
-def moving_average(a, n=100) :
-    ret = np.cumsum(a, dtype=float)
-    ret[n:] = ret[n:] - ret[:-n]
-    return ret[n - 1:] / n
-
-# plt.plot(R_save)
-# plt.show()
-# plt.plot(moving_average(R_save, n=1000))
-# plt.show()
-# plt.plot(moving_average(N_moves_save, n=1000))
-# plt.show()
-# print('Random_Agent, Average reward:',np.mean(R_save),'Number of steps: ',np.mean(N_moves_save))
-
-# PLOT DEFAULT Q LEARNING AND SARSA
-plt.figure()
-plt.plot(moving_average(Results['Q_learning']['default']['R']), label='Q Learning')
-plt.plot(moving_average(Results['SARSA']['default']['R']), label='SARSA')
-plt.xlabel('Episode Number')
-plt.ylabel('Reward')
-plt.legend()
-plt.show()
-
-qwerty=1
-print('dont stop, I have programs to run')
-print(f'qwerty={qwerty}')
