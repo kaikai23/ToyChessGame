@@ -16,6 +16,8 @@ run `Visualize.py`.
 #### To rerun all our the experiments, 
 run `PlayGame.py`. This will run all the experiments and overwrite files in `results/` folder, and also visualize them in the end. You can also visualize them anytime by running `Visualize.py`. The only thing matters is the files in `results/`.
 
+Note that if you want to also run the new state representation, please checkout the branch `New_State_Representation` and do above again. We keep this experiment in a different branch to avoid ruining other experiments, since the environment becomes different.
+
 ## Try your own experiment in only three lines of code!
 In `PlayGame.py`, under `if __name__ == '__main__':`, you could add your experiment by adding only three lines of code!
 
