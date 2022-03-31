@@ -176,93 +176,93 @@ if __name__ == '__main__':
     Results['Q_learning'] = dict()
     Results['SARSA'] = dict()
 
-    # Q learning, default hyperparameters
-    Results['Q_learning']['default'] = dict()
-    Results['Q_learning']['default']['R'], Results['Q_learning']['default']['N_moves'] = agent.train_q_learning()
-    np.save('results/R_q_default.npy', Results['Q_learning']['default']['R'])
-    np.save('results/N_q_default.npy', Results['Q_learning']['default']['N_moves'])
+    # Q learning, default hyperparameters, new state representation
+    Results['Q_learning']['new'] = dict()
+    Results['Q_learning']['new']['R'], Results['Q_learning']['new']['N_moves'] = agent.train_q_learning()
+    np.save('results/R_q_new.npy', Results['Q_learning']['new']['R'])
+    np.save('results/N_q_new.npy', Results['Q_learning']['new']['N_moves'])
 
-    # SARSA, default hyperparameters
-    Results['SARSA']['default'] = dict()
-    Results['SARSA']['default']['R'], Results['SARSA']['default']['N_moves'] = agent.train_sarsa()
-    np.save('results/R_sarsa_default.npy', Results['SARSA']['default']['R'])
-    np.save('results/N_sarsa_default.npy', Results['SARSA']['default']['N_moves'])
+    # SARSA, default hyperparameters, new state representation
+    Results['SARSA']['new'] = dict()
+    Results['SARSA']['new']['R'], Results['SARSA']['new']['N_moves'] = agent.train_sarsa()
+    np.save('results/R_sarsa_new.npy', Results['SARSA']['new']['R'])
+    np.save('results/N_sarsa_new.npy', Results['SARSA']['new']['N_moves'])
 
-    # DISCOUNT FACTOR: gamma = 0.75
-    agent.set_discount_factor(0.75)
-    Results['Q_learning']['gamma=0.75'] = dict()
-    Results['Q_learning']['gamma=0.75']['R'], Results['Q_learning']['gamma=0.75']['N_moves'] = agent.train_q_learning()
-    np.save('results/R_q_gamma0.75.npy', Results['Q_learning']['gamma=0.75']['R'])
-    np.save('results/N_q_gamma0.75.npy', Results['Q_learning']['gamma=0.75']['N_moves'])
-
-    Results['SARSA']['gamma=0.75'] = dict()
-    Results['SARSA']['gamma=0.75']['R'], Results['SARSA']['gamma=0.75']['N_moves'] = agent.train_sarsa()
-    np.save('results/R_sarsa_gamma0.75.npy', Results['SARSA']['gamma=0.75']['R'])
-    np.save('results/N_sarsa_gamma0.75.npy', Results['SARSA']['gamma=0.75']['N_moves'])
-
-    #  DISCOUNT FACTOR: gamma = 0.95
-    agent.set_discount_factor(0.95)
-    Results['Q_learning']['gamma=0.95'] = dict()
-    Results['Q_learning']['gamma=0.95']['R'], Results['Q_learning']['gamma=0.95']['N_moves'] = agent.train_q_learning()
-    np.save('results/R_q_gamma0.95.npy', Results['Q_learning']['gamma=0.95']['R'])
-    np.save('results/N_q_gamma0.95.npy', Results['Q_learning']['gamma=0.95']['N_moves'])
-
-    Results['SARSA']['gamma=0.95'] = dict()
-    Results['SARSA']['gamma=0.95']['R'], Results['SARSA']['gamma=0.95']['N_moves'] = agent.train_sarsa()
-    np.save('results/R_sarsa_gamma0.95.npy', Results['SARSA']['gamma=0.95']['R'])
-    np.save('results/N_sarsa_gamma0.95.npy', Results['SARSA']['gamma=0.95']['N_moves'])
-
-    # DECAY FACTOR: beta = 0.0005
-    agent.reset_all()
-    agent.set_decay_speed(0.0005)
-    Results['Q_learning']['beta=0.0005'] = dict()
-    Results['Q_learning']['beta=0.0005']['R'], Results['Q_learning']['beta=0.0005']['N_moves'] = agent.train_q_learning()
-    np.save('results/R_q_beta0.0005.npy', Results['Q_learning']['beta=0.0005']['R'])
-    np.save('results/N_q_beta0.0005.npy', Results['Q_learning']['beta=0.0005']['N_moves'])
-
-    Results['SARSA']['beta=0.0005'] = dict()
-    Results['SARSA']['beta=0.0005']['R'], Results['SARSA']['beta=0.0005']['N_moves'] = agent.train_sarsa()
-    np.save('results/R_sarsa_beta0.0005.npy', Results['SARSA']['beta=0.0005']['R'])
-    np.save('results/N_sarsa_beta0.0005.npy', Results['SARSA']['beta=0.0005']['N_moves'])
-
-    # DECAY FACTOR: beta = 0.000005
-    agent.reset_all()
-    agent.set_decay_speed(0.000005)
-    Results['Q_learning']['beta=0.000005'] = dict()
-    Results['Q_learning']['beta=0.000005']['R'], Results['Q_learning']['beta=0.000005']['N_moves'] = agent.train_q_learning()
-    np.save('results/R_q_beta0.000005.npy', Results['Q_learning']['beta=0.000005']['R'])
-    np.save('results/N_q_beta0.000005.npy', Results['Q_learning']['beta=0.000005']['N_moves'])
-
-    Results['SARSA']['beta=0.000005'] = dict()
-    Results['SARSA']['beta=0.000005']['R'], Results['SARSA']['beta=0.000005']['N_moves'] = agent.train_sarsa()
-    np.save('results/R_sarsa_beta0.000005.npy', Results['SARSA']['beta=0.000005']['R'])
-    np.save('results/N_sarsa_beta0.000005.npy', Results['SARSA']['beta=0.000005']['N_moves'])
-
-    # RMSprop
-    agent.reset_all()
-    agent.set_optimizer(lr=0.01, name='RMSprop')
-    Results['Q_learning']['RMSprop'] = dict()
-    Results['Q_learning']['RMSprop']['R'], Results['Q_learning']['RMSprop']['N_moves'] = agent.train_q_learning()
-    np.save('results/R_q_RMSprop.npy', Results['Q_learning']['RMSprop']['R'])
-    np.save('results/N_q_RMSprop.npy', Results['Q_learning']['RMSprop']['N_moves'])
-
-    Results['SARSA']['RMSprop'] = dict()
-    Results['SARSA']['RMSprop']['R'], Results['SARSA']['RMSprop']['N_moves'] = agent.train_sarsa()
-    np.save('results/R_sarsa_RMSprop.npy', Results['SARSA']['RMSprop']['R'])
-    np.save('results/N_sarsa_RMSprop.npy', Results['SARSA']['RMSprop']['N_moves'])
-
-    # AdamW
-    agent.reset_all()
-    agent.set_optimizer(lr=0.001, name='AdamW')
-    Results['Q_learning']['AdamW'] = dict()
-    Results['Q_learning']['AdamW']['R'], Results['Q_learning']['AdamW']['N_moves'] = agent.train_q_learning()
-    np.save('results/R_q_AdamW.npy', Results['Q_learning']['AdamW']['R'])
-    np.save('results/N_q_AdamW.npy', Results['Q_learning']['AdamW']['N_moves'])
-
-    Results['SARSA']['AdamW'] = dict()
-    Results['SARSA']['AdamW']['R'], Results['SARSA']['AdamW']['N_moves'] = agent.train_sarsa()
-    np.save('results/R_sarsa_AdamW.npy', Results['SARSA']['AdamW']['R'])
-    np.save('results/N_sarsa_AdamW.npy', Results['SARSA']['AdamW']['N_moves'])
+    # # DISCOUNT FACTOR: gamma = 0.75
+    # agent.set_discount_factor(0.75)
+    # Results['Q_learning']['gamma=0.75'] = dict()
+    # Results['Q_learning']['gamma=0.75']['R'], Results['Q_learning']['gamma=0.75']['N_moves'] = agent.train_q_learning()
+    # np.save('results/R_q_gamma0.75.npy', Results['Q_learning']['gamma=0.75']['R'])
+    # np.save('results/N_q_gamma0.75.npy', Results['Q_learning']['gamma=0.75']['N_moves'])
+    #
+    # Results['SARSA']['gamma=0.75'] = dict()
+    # Results['SARSA']['gamma=0.75']['R'], Results['SARSA']['gamma=0.75']['N_moves'] = agent.train_sarsa()
+    # np.save('results/R_sarsa_gamma0.75.npy', Results['SARSA']['gamma=0.75']['R'])
+    # np.save('results/N_sarsa_gamma0.75.npy', Results['SARSA']['gamma=0.75']['N_moves'])
+    #
+    # #  DISCOUNT FACTOR: gamma = 0.95
+    # agent.set_discount_factor(0.95)
+    # Results['Q_learning']['gamma=0.95'] = dict()
+    # Results['Q_learning']['gamma=0.95']['R'], Results['Q_learning']['gamma=0.95']['N_moves'] = agent.train_q_learning()
+    # np.save('results/R_q_gamma0.95.npy', Results['Q_learning']['gamma=0.95']['R'])
+    # np.save('results/N_q_gamma0.95.npy', Results['Q_learning']['gamma=0.95']['N_moves'])
+    #
+    # Results['SARSA']['gamma=0.95'] = dict()
+    # Results['SARSA']['gamma=0.95']['R'], Results['SARSA']['gamma=0.95']['N_moves'] = agent.train_sarsa()
+    # np.save('results/R_sarsa_gamma0.95.npy', Results['SARSA']['gamma=0.95']['R'])
+    # np.save('results/N_sarsa_gamma0.95.npy', Results['SARSA']['gamma=0.95']['N_moves'])
+    #
+    # # DECAY FACTOR: beta = 0.0005
+    # agent.reset_all()
+    # agent.set_decay_speed(0.0005)
+    # Results['Q_learning']['beta=0.0005'] = dict()
+    # Results['Q_learning']['beta=0.0005']['R'], Results['Q_learning']['beta=0.0005']['N_moves'] = agent.train_q_learning()
+    # np.save('results/R_q_beta0.0005.npy', Results['Q_learning']['beta=0.0005']['R'])
+    # np.save('results/N_q_beta0.0005.npy', Results['Q_learning']['beta=0.0005']['N_moves'])
+    #
+    # Results['SARSA']['beta=0.0005'] = dict()
+    # Results['SARSA']['beta=0.0005']['R'], Results['SARSA']['beta=0.0005']['N_moves'] = agent.train_sarsa()
+    # np.save('results/R_sarsa_beta0.0005.npy', Results['SARSA']['beta=0.0005']['R'])
+    # np.save('results/N_sarsa_beta0.0005.npy', Results['SARSA']['beta=0.0005']['N_moves'])
+    #
+    # # DECAY FACTOR: beta = 0.000005
+    # agent.reset_all()
+    # agent.set_decay_speed(0.000005)
+    # Results['Q_learning']['beta=0.000005'] = dict()
+    # Results['Q_learning']['beta=0.000005']['R'], Results['Q_learning']['beta=0.000005']['N_moves'] = agent.train_q_learning()
+    # np.save('results/R_q_beta0.000005.npy', Results['Q_learning']['beta=0.000005']['R'])
+    # np.save('results/N_q_beta0.000005.npy', Results['Q_learning']['beta=0.000005']['N_moves'])
+    #
+    # Results['SARSA']['beta=0.000005'] = dict()
+    # Results['SARSA']['beta=0.000005']['R'], Results['SARSA']['beta=0.000005']['N_moves'] = agent.train_sarsa()
+    # np.save('results/R_sarsa_beta0.000005.npy', Results['SARSA']['beta=0.000005']['R'])
+    # np.save('results/N_sarsa_beta0.000005.npy', Results['SARSA']['beta=0.000005']['N_moves'])
+    #
+    # # RMSprop
+    # agent.reset_all()
+    # agent.set_optimizer(lr=0.01, name='RMSprop')
+    # Results['Q_learning']['RMSprop'] = dict()
+    # Results['Q_learning']['RMSprop']['R'], Results['Q_learning']['RMSprop']['N_moves'] = agent.train_q_learning()
+    # np.save('results/R_q_RMSprop.npy', Results['Q_learning']['RMSprop']['R'])
+    # np.save('results/N_q_RMSprop.npy', Results['Q_learning']['RMSprop']['N_moves'])
+    #
+    # Results['SARSA']['RMSprop'] = dict()
+    # Results['SARSA']['RMSprop']['R'], Results['SARSA']['RMSprop']['N_moves'] = agent.train_sarsa()
+    # np.save('results/R_sarsa_RMSprop.npy', Results['SARSA']['RMSprop']['R'])
+    # np.save('results/N_sarsa_RMSprop.npy', Results['SARSA']['RMSprop']['N_moves'])
+    #
+    # # AdamW
+    # agent.reset_all()
+    # agent.set_optimizer(lr=0.001, name='AdamW')
+    # Results['Q_learning']['AdamW'] = dict()
+    # Results['Q_learning']['AdamW']['R'], Results['Q_learning']['AdamW']['N_moves'] = agent.train_q_learning()
+    # np.save('results/R_q_AdamW.npy', Results['Q_learning']['AdamW']['R'])
+    # np.save('results/N_q_AdamW.npy', Results['Q_learning']['AdamW']['N_moves'])
+    #
+    # Results['SARSA']['AdamW'] = dict()
+    # Results['SARSA']['AdamW']['R'], Results['SARSA']['AdamW']['N_moves'] = agent.train_sarsa()
+    # np.save('results/R_sarsa_AdamW.npy', Results['SARSA']['AdamW']['R'])
+    # np.save('results/N_sarsa_AdamW.npy', Results['SARSA']['AdamW']['N_moves'])
 
 
     visualize()

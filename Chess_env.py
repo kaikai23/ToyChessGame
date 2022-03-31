@@ -201,7 +201,7 @@ class Chess_Env:
         K2dof[np.sum(self.dfk2_constrain).astype(int)]=1
         
         # ALL FEATURES...
-        x = np.concatenate([s_k1, s_q1, s_k2, check, K2dof],0)
+        x = np.concatenate([s_k1, s_q1, s_k2, check, self.a_k2.squeeze()],0)
         # x.shape[0] = 16 + 16 + 16 + 2 + 8
         
         return x

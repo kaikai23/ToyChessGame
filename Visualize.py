@@ -24,30 +24,42 @@ def visualize():
     # plt.show()
 
 
-    # Q Learning vs. SARSA (both use default hyperparameters)
+    # Q Learning vs. SARSA (both use default hyperparameters) + vs. new state representation
     r1 = np.load('results/R_q_default.npy')
     r2 = np.load('results/R_sarsa_default.npy')
+    r3 = np.load('results/R_q_new.npy')
+    r4 = np.load('results/R_sarsa_new.npy')
 
     plt.figure()
-    plt.plot(moving_average(r1, 1000), label='Q Learning')
-    plt.plot(moving_average(r2, 1000), label='SARSA')
+    plt.plot(moving_average(r1, 2000), label='Q Learning')
+    plt.plot(moving_average(r2, 2000), label='SARSA')
+    plt.plot(moving_average(r3, 2000), label='Q Learning + new state')
+    plt.plot(moving_average(r4, 2000), label='SARSA + new state')
     plt.xlabel('Episode Number')
     plt.ylabel('Reward')
-    plt.title('Q Learning vs. SARSA ')
+    plt.ylim(0.8, 1)
+    plt.title('New state representation')
     plt.legend()
     plt.show()
 
     n1 = np.load('results/N_q_default.npy')
     n2 = np.load('results/N_sarsa_default.npy')
+    n3 = np.load('results/N_q_new.npy')
+    n4 = np.load('results/N_sarsa_new.npy')
 
     plt.figure()
-    plt.plot(moving_average(n1, 1000), label='Q Learning')
-    plt.plot(moving_average(n2, 1000), label='SARSA')
+    plt.plot(moving_average(n1, 2000), label='Q Learning')
+    plt.plot(moving_average(n2, 2000), label='SARSA')
+    plt.plot(moving_average(n3, 2000), label='Q Learning + new state')
+    plt.plot(moving_average(n4, 2000), label='SARSA + new state')
     plt.xlabel('Episode Number')
     plt.ylabel('Number of Moves')
-    plt.title('Q Learning vs. SARSA ')
+    plt.ylim(2,5)
+    plt.title('New state representation')
     plt.legend()
     plt.show()
+
+    exit(0)
 
 
     # Q Learning, Ablation: gamma 0.75 vs 0.85 vs 0.95
